@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import './App.css';
-import { Layout, Menu, Breadcrumb, Row, Col, Input, Space, Button, Dropdown } from 'antd';
+import { Layout, Menu, Breadcrumb, Row, Col, Input, Space, Button, Dropdown, Radio } from 'antd';
 import { UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons/lib/icons';
 import Nav1 from '../nav1'
 import Nav2 from '../nav2'
-import Nav3 from '../nav3'
-import Nav4 from '../nav4'
-import Nav5 from '../nav5'
 import User from '../User'
 const { Header, Content, Footer } = Layout;
 
 function App() {
   const [menu, setMenu] = useState("Nav1")
+  const [value, setValue] = useState("教师")
   const [user, setUser] = useState({
     username: null,
     passwd: null
@@ -24,22 +22,19 @@ function App() {
   }
   const menu1 = (
     <Menu>
-      <Menu.Item onClick={() => { setMenu('User') }}>
-        个人资料
-      </Menu.Item>
       <Menu.Item onClick={() => { setFlag(0) }}>
         退出
       </Menu.Item>
     </Menu>
   )
   return (
-    flag === 1 ?
+    flag === 1 && user.username === 'wang' && user.passwd === '123' ?
       <Layout className="layout">
         <Header>
           <Row>
             <Col span={20}>
               <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                {new Array(5).fill(null).map((_, index) => {
+                {new Array(2).fill(null).map((_, index) => {
                   const key = index + 1;
                   return <Menu.Item style={{ margin: '0 20px' }} key={`nav ${key}`} onClick={() => setMenu(`Nav${key}`)}>{`nav ${key}`}</Menu.Item>;
                 })}
@@ -47,7 +42,7 @@ function App() {
             </Col>
             <Col span={4}>
               <Dropdown overlay={menu1}>
-                <span style={{ color: 'white' }} ><UserOutlined style={{ marginRight: '20px' }} />wang</span>
+                <span style={{ color: 'white' }} ><UserOutlined style={{ marginRight: '20px' }} />{value}</span>
               </Dropdown>
             </Col>
           </Row>
@@ -62,15 +57,9 @@ function App() {
               () => {
                 switch (menu) {
                   case "Nav1":
-                    return <Nav1 />
+                    return <Nav1 value={value} />
                   case "Nav2":
-                    return <Nav2 />
-                  case "Nav3":
-                    return <Nav3 />
-                  case "Nav4":
-                    return <Nav4 />
-                  case "Nav5":
-                    return <Nav5 />
+                    return <Nav2 value={value} />
                   default:
                     return <User user={user} />
                 }
@@ -98,6 +87,10 @@ function App() {
                   })
                 }}
               />
+              <Radio.Group onChange={(e) => { setValue(e.target.value) }} value={value}>
+                <Radio value={"教师"}>教师</Radio>
+                <Radio value={"学生"}>学生</Radio>
+              </Radio.Group>
               <Button onClick={login}>登录</Button>
             </Space>
           </Col>
